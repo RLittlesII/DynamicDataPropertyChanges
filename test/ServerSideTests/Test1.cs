@@ -105,6 +105,12 @@ public class Departments : ReactiveObject, IObservableCollection<Department>
         remove => _departments.CollectionChanged -= value;
     }
 
+    event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
+    {
+        add => this.PropertyChanged += value;
+        remove => this.PropertyChanged -= value;
+    }
+
     IEnumerator<Department> IEnumerable<Department>.GetEnumerator() => _departments.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => _departments.GetEnumerator();
@@ -143,7 +149,7 @@ public class Departments : ReactiveObject, IObservableCollection<Department>
 
     void IObservableCollection<Department>.Move(int oldIndex, int newIndex) => _departments.Move(oldIndex, newIndex);
 
-    private ObservableCollectionExtended<Department> _departments = new();
+    private readonly ObservableCollectionExtended<Department> _departments = [];
 }
 
 public class Department : ReactiveObject
@@ -198,10 +204,10 @@ public class FakeStore
         var departmentFaker = new Faker<Department>()
             .RuleFor(d => d.Id, f => f.IndexFaker + 1)
             .RuleFor(d => d.Name, f => f.Commerce.Department())
-            .RuleFor(d => d.Item1, f => itemFaker.Generate())
-            .RuleFor(d => d.Item2, f => itemFaker.Generate())
-            .RuleFor(d => d.Item3, f => itemFaker.Generate())
-            .RuleFor(d => d.Item4, f => itemFaker.Generate());
+            .RuleFor(d => d.Item1, _ => itemFaker.Generate())
+            .RuleFor(d => d.Item2, _ => itemFaker.Generate())
+            .RuleFor(d => d.Item3, _ => itemFaker.Generate())
+            .RuleFor(d => d.Item4, _ => itemFaker.Generate());
 
         // Faker for StoreViewModel
         var storeViewModelFaker = new Faker<Store>()
